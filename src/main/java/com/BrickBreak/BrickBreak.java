@@ -97,6 +97,7 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 		
 		//the ball
 		ball.draw(g);
+
 		
 		//check for game over
 		if (ball.getYpos() > 570) {

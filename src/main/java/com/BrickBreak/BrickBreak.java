@@ -11,7 +11,6 @@ package com.BrickBreak;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -51,7 +50,7 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 
 		map = new Brick[mapHeight][mapWidth];
 		setFocusable(true);
-        addKeyListener(this);
+		addKeyListener(this);
 		setFocusTraversalKeysEnabled(false);
 		timer = new Timer(delay, this);
 		for (int i = 0; i < mapHeight; i++) {
@@ -63,10 +62,11 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 		timer.start();
 	}
 
-	
-	//precondition: Graphics g is not null.
-	//postcondition: paints the entire game of brick break including all associated components onto the screen.
-	//additionally will check to see if the game is over and draw the game over screen if appropriate.
+	// precondition: Graphics g is not null.
+	// postcondition: paints the entire game of brick break including all associated
+	// components onto the screen.
+	// additionally will check to see if the game is over and draw the game over
+	// screen if appropriate.
 	public void paint(Graphics g) {
 		// background
 		g.setColor(Color.black);
@@ -79,7 +79,7 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 					b.draw(g);
 			}
 		}
-		
+
 		// score
 		g.setColor(Color.white);
 		g.setFont(new Font("serif", Font.BOLD, 25));
@@ -89,30 +89,27 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 		g.setColor(Color.yellow);
 		g.fillRect(0, 0, 3, 590);
 		g.fillRect(0, 0, 692, 3);
-		g.fillRect(682, 0 , 3, 590);
-		
+		g.fillRect(682, 0, 3, 590);
 
-        // the paddle
+		// the paddle
 		player.draw(g);
-		
-		//the ball
+
+		// the ball
 		ball.draw(g);
 
-		
-		//check for game over
+		// check for game over
 		if (ball.getYpos() > 570) {
 			play = false;
 			g.setColor(Color.red);
 			g.setFont(new Font("serif", Font.BOLD, 30));
-			g.drawString("Game Over, Score: "+score, 190, 300);
+			g.drawString("Game Over, Score: " + score, 190, 300);
 			g.setFont(new Font("serif", Font.BOLD, 20));
 			g.drawString("Press Enter to Restart ", 230, 350);
-		}
-		else if (totalBricks <= 0) {
+		} else if (totalBricks <= 0) {
 			play = false;
 			g.setColor(Color.red);
 			g.setFont(new Font("serif", Font.BOLD, 30));
-			g.drawString("You Won, Score: "+score, 190, 300);
+			g.drawString("You Won, Score: " + score, 190, 300);
 
 			g.setFont(new Font("serif", Font.BOLD, 20));
 			g.drawString("Press Enter to Restart ", 230, 350);
@@ -120,22 +117,18 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 		g.dispose();
 	}
 
-	//precondition: the game has been properly initialized
-	//postcondition: detects collision between the ball and other surfaces and changes the ball's direction accordingly.
+	// precondition: the game has been properly initialized
+	// postcondition: detects collision between the ball and other surfaces and
+	// changes the ball's direction accordingly.
 	private void checkCollision() {
 
 		Rectangle ballHitBox = new Rectangle(ball.getXpos(), ball.getYpos(), ball.getSize(), ball.getSize());
 		Rectangle playerHitBox = new Rectangle(player.getX(), player.getY(), player.getWidth(), player.getHeight());
-		
+
 		// paddle collision
 		if (ballHitBox.intersects(playerHitBox)) {
 			ball.reverseY();
-			if (player.getVelocity() > 0) {
-				ball.setXVelocity(1);
-			}
-			if (player.getVelocity() < 0) {
-				ball.setXVelocity(-1);
-			}
+
 		}
 
 		// brick collision
@@ -148,18 +141,18 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 						map[i][j].hit();
 						score++;
 						if (ball.getXpos() + ball.getSize() <= map[i][j].getX()) {
-							ball.setX(map[i][j].getX()-ball.getSize() -1);
+							ball.setX(map[i][j].getX() - ball.getSize() - 1);
 							ball.reverseX();
-						} else if(ball.getXpos() + 1 >= map[i][j].getX() + map[i][j].getWidth()) {
-							ball.setX(map[i][j].getX()+map[i][j].getWidth() +1);
+						} else if (ball.getXpos() + 1 >= map[i][j].getX() + map[i][j].getWidth()) {
+							ball.setX(map[i][j].getX() + map[i][j].getWidth() + 1);
 							ball.reverseX();
-						}else {
+						} else {
 							ball.reverseY();
 						}
 
 						if (map[i][j].getHp() <= 0) {
 							map[i][j] = null;
-							totalBricks --;
+							totalBricks--;
 						}
 
 						break;
@@ -169,20 +162,19 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 		}
 
 		// wall collision
-		if (ball.getXpos() < 0 || ball.getXpos()+ball.getSize() > 682) {
+		if (ball.getXpos() < 0 || ball.getXpos() + ball.getSize() > 682) {
 			ball.reverseX();
 		}
-		
+
 		if (ball.getYpos() < 0) {
 			ball.reverseY();
 		}
 
-
 	}
 
-	
-	//precondition: A timer is set up to run the game with a proper delay
-	//postondition: The actions required to play the game are taken and the screen updated.
+	// precondition: A timer is set up to run the game with a proper delay
+	// postondition: The actions required to play the game are taken and the screen
+	// updated.
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (play) {
@@ -202,8 +194,9 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 	public void keyTyped(KeyEvent e) {
 	}
 
-	//precondition: all components of the game properly intialized
-	//postondition: paddle moves according to keys pressed (left/right). If the user presses enter the game is restarted.
+	// precondition: all components of the game properly intialized
+	// postondition: paddle moves according to keys pressed (left/right). If the
+	// user presses enter the game is restarted.
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
@@ -211,14 +204,14 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 			if (player.getVelocity() == 0)
 				player.addVelocity(8);
 			else {
-				player.addVelocity(4);
+				player.addVelocity(8);
 			}
 		} else if (e.getKeyCode() == KeyEvent.VK_LEFT) {
 			play = true;
 			if (player.getVelocity() == 0)
 				player.addVelocity(-8);
 			else {
-				player.addVelocity(-4);
+				player.addVelocity(-8);
 			}
 		}
 
@@ -227,7 +220,7 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 			ball.setX(350);
 			ball.setY(450);
 			ball.setXVelocity(1);
-			ball.setYVelocity(-2);
+			ball.setYVelocity(-1);
 			player.setX(310);
 			player.setVelocity(0);
 			score = 0;
@@ -243,6 +236,5 @@ public class BrickBreak extends JPanel implements KeyListener, ActionListener {
 		}
 
 	}
-
 
 }
